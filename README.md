@@ -2,7 +2,7 @@
 
 Test project for Spring Boot with Swagger documentation and Stomp-based push.
 
-* Open http://localhost:8080/projecttwo.html
+* Open [Test page](http://localhost:8080/projecttwo.html)
 * Click Add matches
 * Click Connect
 * Enter match-id for the subscription, preferrably "1" and click Subscribe.
