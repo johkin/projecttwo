@@ -1,9 +1,6 @@
 package se.acrend.microservice.projecttwo.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 /**
  *
@@ -20,6 +17,9 @@ public class MatchEvent {
     private Team team;
 
     private String eventType;
+    @ManyToOne
+    private Match ownerMatch;
+
 
     public Long getId() {
         return id;
@@ -43,5 +43,13 @@ public class MatchEvent {
 
     public void setEventType(String eventType) {
         this.eventType = eventType;
+    }
+
+    public Match getOwnerMatch() {
+        return ownerMatch;
+    }
+
+    public void setOwnerMatch(Match ownerMatch) {
+        this.ownerMatch = ownerMatch;
     }
 }
