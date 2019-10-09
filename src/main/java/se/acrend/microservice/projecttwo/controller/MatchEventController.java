@@ -64,12 +64,15 @@ public class MatchEventController {
 
         matchRepository.save(match);
 
+        System.out.println("Match id: " + match.getId());
+
         return match.getId();
     }
 
     @RequestMapping(path = "/match/{matchId}/addEvent", method = RequestMethod.POST)
     public @ResponseBody Long addEvent(@PathVariable Long matchId, @RequestBody String eventType) {
-        final Match match = matchRepository.findOne(matchId);
+
+        final Match match = matchRepository.findById(matchId).get();
         final MatchEvent matchEvent = new MatchEvent();
         matchEvent.setEventType(eventType);
         matchEvent.setTeam(match.getHomeTeam());

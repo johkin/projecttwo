@@ -1,0 +1,115 @@
+<html>
+
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.4.2/bundles/stomp.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+
+<script>
+
+    var stompClient = null;
+
+    $(document).ready(function () {
+
+        stompClient = new StompJs.Client();
+        stompClient.brokerURL = "ws://localhost:8080/portfolio";
+
+        stompClient.onConnect = function () {
+            alert("Connected")
+            $("#subscribeButton").prop("disabled", false)
+        };
+        stompClient.onStompError = function (error) {
+            alert(error)
+        };
+
+        $("#connectButton").prop("disabled", false)
+    })
+
+
+    function connect() {
+        stompClient.activate();
+    }
+
+
+    function subscribe() {
+
+        var matchId = $("#subMatchId").val()
+
+        var subscription = stompClient.subscribe("/topic/match/" + matchId + "/events", function (message) {
+            var matchEvent = JSON.parse(message.body)
+            $("#subscriptionLog").append(matchEvent.eventType + "<br>")
+        });
+    }
+
+    function addTestData() {
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/createTestData",
+            data: null,
+            dataType: 'json',
+            timeout: 100000,
+            success: function (data) {
+                console.log("SUCCESS: ", data);
+            },
+            error: function (e) {
+                console.log("ERROR: ", e);
+            },
+            done: function (e) {
+                console.log("DONE");
+            }
+        });
+    }
+
+
+    function addMatchEvent() {
+
+        var matchId = $("#matchId").val()
+        var eventType = $("#eventType").val()
+
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/match/" + matchId + "/addEvent",
+            data: JSON.stringify(eventType),
+            dataType: 'json',
+            timeout: 100000,
+            success: function (data) {
+                console.log("SUCCESS: ", data);
+            },
+            error: function (e) {
+                console.log("ERROR: ", e);
+            },
+            done: function (e) {
+                console.log("DONE");
+            }
+        });
+    }
+
+
+</script>
+
+<h2>Documentation</h2>
+<a href="/swagger-ui.html" target="_blank">Swagger</a><br>
+<a href="/browser/index.html" target="_blank">HAL Browser</a>
+
+
+<h2>Init test data</h2>
+<input type="button" onclick="addTestData()" value="Add matches"/>
+
+
+<h2>Add match event</h2>
+<label for="matchId">Match-id</label> <input type="number" id="matchId"><br>
+<label for="eventType">Eventtype</label> <input type="text" id="eventType"><br>
+<input type="button" onclick="addMatchEvent()" value="Add event" id="addEventButton"/>
+
+<h2>Push stuff</h2>
+
+<input type="button" onclick="connect()" value="Connect" id="connectButton"/><br>
+<br>
+<label for="subMatchId">Match-id</label> <input type="text" id="subMatchId"><br>
+<input type="button" onclick="subscribe()" value="Subcribe" id="subscribeButton"/>
+
+<div id="subscriptionLog"></div>
+
+
+</html>
