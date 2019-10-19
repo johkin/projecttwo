@@ -41,7 +41,7 @@ public class MatchEventController {
         return "[" + LocalDateTime.now() + ": " + greeting;
     }
 
-    @RequestMapping(path = "/createTestData", method = RequestMethod.POST)
+    @PostMapping(path = "/createTestData")
     public @ResponseBody Long createTestData() {
 
         Tournament tournament = new Tournament();
